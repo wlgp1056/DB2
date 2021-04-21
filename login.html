@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<?php
+$err_msg = "";
+if (!isset($_COOKIE['user_id'])) {
+	if (isset($_POST['submit'])) {
+		$d = mysqli_connect("localhost", "root", "vixx0524", "movie", "3307");
+		$id = $_POST['id'];
+		$pass = $_POST['pass'];
+		
+		if (!empty($id) && !empty($pass)) {
+			$query = "select m_id, m_pw from mem where m_id='$id' and m_pw='$pass'";
+			$data = mysqli_query($d, $query);
+			if (mysqli_num_rows($data) == 1) {
+				setcookie('user_id', $id);
+				setcookie('user_pass', $pass);
+				$next_url = 'https://'.$_SERVER['HTTP_HOST'].dirname($_SERVER['PHP_SELF']).'/main.php';
+				header('Location:'.$next_url);
+			}
+			else {
+				$err_msg = "로그인을 위해 정확한 id와 password를 입력하세요 <br>";
+			}
+		}//empty
+		else {
+			$err_msg="입력되지 않은 값들이 있습니다.<br>";
+		}
+	} //submit
+}//$_COOKIE
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta charset="utf-8">
+<title>Login Page</title>
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="http://www.modernizr.com/downloads/modernizr-latest.js"></script>
+<script type="text/javascript" src="placeholder.js"></script>
+</head>
+<body>
+<form id="slick-login">
+<label for="username">이름</label><input type="text" name="username" class="placeholder" placeholder="id">
+<label for="password">비밀번호</label><input type="password" name="password" class="placeholder" placeholder="password">
+<input type="submit" value="Log In">
+</form>
+</body>
+</html>
